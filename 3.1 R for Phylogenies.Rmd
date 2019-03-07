@@ -1,0 +1,564 @@
+---
+title: "R for Phylogenies: Introduction"
+output: html_notebook
+---
+
+Students should clone the repository from GitHub and then work through Line 300 of this R Notebook before our Digital Lab on March 8th.  
+
+Completing exercises will require running code to get output, and then adapting code or writing new code, and running it to be sure it gives appropriate output. As appropriate, add incude hash-tagged comment lines within chunks of code, and/or add descriptive, explanatory or interpretative notes about output.  
+
+During the March 8th session, we'll quickly review mini-exercises. There are five of them, four in the first part.  During the session on Friday, we will then delve into later portions of this notebook. It's useful that you've reated (and have handy) one more more of the lists  created for submission with Portfolio 2, because they're used for later exercises and completing Portfolio 3.  There's also a fifth and final mini-exercise toward the end of the notebook.
+
+To add new commands that can be run and also saved to re-run or modify later: click the *Insert Chunk* button on the above toolbar or press *Ctrl+Alt+I*. It's also possible to directly keyboard this with a total of six keystrokes at the top (```{r}) three at the bottom (```). It's also possible to highlight a chunk or certain lines in a chck, and to copy-paste elsewhere in the R Notebook document. 
+
+#### ACKNOWLEDGEMENTS
+What's below is compiled from or inspired by multiple sources. Material created by Nicholas Matzke and Dan Warren has been used at workshops at NIMBios. References: 
+Matzke, Nicholas J.; Warren, Dan (2016). "Introduction to R, starting from scratch." 
+Free to use/redistribute under: Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0) 
+This program is free software; you can redistribute it and/or modify it under the terms of the above license, linked here: http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+Other useful resources:
+
+https://ropensci.org/tutorials/
+
+http://phylodiversity.net/phylomatic/
+
+https://github.com/ropensci/brranching
+
+
+### HOMEWORK TO PREPARE FOR DIGITAL LAB 3
+
+As usual, a first step upon opening R Studio is to load the appropriate packages using the command "library". If you have never previously installed the package, you must do that first.  
+
+Often you are downloading packages from what's called a "CRAN Repository" with CRAN standing for "Comprehensive R Archive Network". 
+
+It is also possible to download R Packages from GitHub repositories if you have a package called "devtools" installed in R Studio. That's how we are downloading the package called "brranching" which is part of a project known as R Open Science (https://ropensci.org/)
+
+```{r}
+#install.packages(ape)
+#install.packages("devtools")
+#devtools::install_github("ropensci/brranching")
+library("ape")
+#library("brranching")
+```
+
+##Phylogenies
+
+In introductory biology, you should have been introduced to phylogenies -- why they are important, the meaning of their graphical formatting, perhaps how they are inferred from raw data (in an associated character matrix). 
+
+Having discussed that briefly during Wednesday's class, we're going to review and work with an intuitive, easy, and widespread ways to summarize phylogenetic relationships: Newick code.  
+
+The text in green below is what a simple Newick string variable looks like. (It is a string variable, synonymous with character variable.) Notice the semi-colon at the end, outside of the last closing parenthesis. It is initially just being created as a character variable. Then it is identified as a phylogeny ("read as a tree") using the command "read.tree" which is part of the R Package APE. Then it can be plotted to generate a graphical depiction of the phylogeny.
+
+More on Newick format, which, annoyingly, is sometimes inconsistent:
+http://en.wikipedia.org/wiki/Newick_format
+
+```{r}
+newick_str = "(((Humans, Chimps), Gorillas), Orangs);"
+#Here, we are defining a character variable. 
+tr_primates = read.tree(text=newick_str)
+#Now, with the command "read.tree" from the Package APE, we are converting that simple character variable by reading it as a tree, also known as a phylo object. The function in APE is going to understand not only that there are four "tip taxa" but also that the structure of the parenthesis is meaningful as a hypothesis about their evolutionary relationship, and at the same time the information needed to connect them into a tree diagram with three nodes (which are ancestral taxa to these tip taxa). Before you run the code, think about what the phylogenetic tree should look like, basedo n what you know about these four taxa and about what you know about the code. 
+plot(tr_primates)
+#This last line simply plotted the object as a tree. More about this below. 
+```
+
+You may remember that during Digital Lab 1 on February 1st, we used the function "plot" to make an X-Y plot. 
+
+Why can we use it here to plot a phylogeny? 
+
+It's because the data class of "tr_primates" is stored in the file structure of the R Environment as a tree, a list of at least three things: tips, nodes, and edges. This special type of data object is typically called a 
+"phylo object". 
+
+If you look in the R Studio windo at the upper right, you should see in the "Environment" tab that one thing on your list is tr_primate. You can find out more about it by clicking, and it will open in a new tab. 
+
+Here's a way to access the help menu for some documentation about what these commands are for. Look for the documentation to appear in the lower left-hand window of R Studio. 
+```{r}
+?plot
+```
+
+What is the difference between regular plot and the command below, if any?
+```{r}
+?plot.phylo
+```
+
+
+### MINI EXERCISE 1: Understanding Newick and Phylo Objects
+
+As an alternative to using the R Studio window at top right, instead write and submit a few commands such as
+
+tr_primates
+
+str("tr_primates")
+
+and
+
+str(tr_primates)
+
+attributes(tr_primates)
+
+names(tr_primates) 
+
+Generate output, and then write brief notes about the information you are given by submitting these commands.  
+
+There are many trees that can be drawn to show relationships of four taxa. Some have the same topology and simply re-arrange the placement of taxa on the tips. Others differ in the topology that connects tips to internal nodes. Among the many possibilities, many are inconsistent or non-parsimonious with respect to  available data used for inferring phylogenies. Typically fewer will be consistent and parsimoneous, sometimes one will be uniquely best to fit the data. 
+
+To finish up Mini-Exercise 1, write new code with a new Newick string variable, read the string using read.tree, and plot it. The goal is to generate a four-taxon tree with a new topology. It will be an erroneous tree, depicting relationships that contradict today's biological knowledge. That's okay; this is just an exercise.
+
+#### Overall message about phylogenies
+Phylogenies have tips, nodes and edges. Nodes are ancestors to tips. Tips and edges are connected by nodes. Also, reecent or derived nodes can  connect to older or ancestral nodesThe details of how tips and nodes connect (via edges) is dictate by the newick code. 
+
+This is technical but basic jargon. What is complex and rich is the biological and evolutionary meaning in this framework, important for understanding conservation, ethnobotany, ecology, conservation, ethnobotany or crop breeding, and evolutionary processes such as migration, hybridization, speciation or extinction. 
+
+If your knowledge or recall of phylogenies and associated vocabulary are limited, here is a handy glossary resource: http://pages.stat.wisc.edu/~larget/Genetics629/outline1.pdf
+
+## Tip and Node Structure in Phylogenies Imply a Hypothesis: Simple Botanical Examples
+
+The chunk below has repeated these commands, but for plant taxa. 
+
+Before you run the code, can you tell from the Newick code if the phylogeny is botanically correct? Or is it  erroneous? Confused? Recall from class on Wed 3/6 that Newick format is based on groupings, with taxa that are more related closer together than taxa that are less related. Also recall what you learned from introductory biology in high school or biology about about monophyletic groups such as the Monocots and Eudicots.  
+
+```{r}
+newick_str = "(((Cabbage, Corn), Kale), Wheat);"
+tr_plants = read.tree(text=newick_str)
+plot(tr_plants)
+```
+
+If it was hard to see relationships in the NewicK format, is it easier in this plotted tree format? Here are more resources if you feel like you need more help to review plant diversity or phylogenetics. 
+
+https://www.ebi.ac.uk/training/online/course/introduction-phylogenetics
+https://en.wikipedia.org/wiki/APG_IV_system
+
+Is the phylogeny below better for these four taxa? and why or why not? (Can you tell directly from the Newick)?
+
+```{r}
+newick_str = "(Wheat,(Corn,(Cabbage, Kale)));"
+tr2_plants = read.tree(text=newick_str)
+plot(tr2_plants)
+```
+
+## MINI-EXERCISE 2
+
+1. Copy, paste and re-write a chunk of code (or write it fresh): write a new Newick tree as as string variable, read it as a tree, and plot it. Make sure it is consistent with 2018 botanical knowledge about these four taxa. You may need to modify topology.
+
+2. To these four taxa, add two additional taxa: radish and sequoia. For these six tip taxa, write a new Newick variable, read it, and plot it. Then repeat. Aim to write two alternative trees: one erroneous and one correct. 
+a. Explain what's wrong in your erroneous tree and how you've corrected the error in the other tree. .
+b. Use commands such as "str" or "attribute" and comment about whether your erroneous and correct tree differ in tips, Nnodes, or edges. 
+
+## Branching order and branching lengths
+
+Returning to the original tree, What was added to the tree and the plot of the tree?
+
+```{r}
+newick_str = "(((Humans:12.5, Chimps:12.5):1.0, Gorillas:14.0):1.0, Orangs:14.5):1.0;"
+tr_primate = read.tree(text=newick_str)
+plot(tr_primate)
+```
+
+What was added to the tree and the plot of the tree?
+
+```{r}
+newick_str = "(((Humans:6.0, Chimps:6.0)LCA_humans_chimps:1.0, Gorillas:7.0)LCA_w_gorillas:1.0, Orangs:8.0)LCA_w_orangs:1.0;"
+tr_primate = read.tree(text=newick_str)
+plot(tr_primate, show.node.label=TRUE)
+attributes(tr_primate)
+tr_primate
+```
+
+## MINI-EXERCISE 3
+
+In November 2017, scientists discovered that there are two Orang species, the known species Pongo abelii and the new species Pongo tapanuliensis. The two taxa are estimated to have separated about 3.5 million years ago. How would you modify the Newick portion of code above to show that there are two species? 
+
+```{r}
+newick_str = "(((Humans:12.5, Chimps:12.5):1.0, Gorillas:14.0):1.0, Orangs:14.5):1.0;"
+tr_primate = read.tree(text=newick_str)
+plot(tr_primate)
+```
+
+## Displaying Phylogenies
+
+Now let's examine some of the types of trees that can be displayed, starting with the default. 
+
+```{r}
+plot(tr_primate, type="phylogram")
+```
+
+```{r}
+plot(tr2_plants, type="phylogram", direction="rightwards")
+plot(tr2_plants, type="phylogram", direction="leftwards")
+plot(tr2_plants, type="phylogram", direction="upwards")
+plot(tr2_plants, type="phylogram", direction="downwards")
+```
+
+```{r}
+plot(tr2_plants, type="cladogram")
+plot(tr2_plants, type="fan")
+plot(tr2_plants, type="unrooted")
+plot(tr2_plants, type="radial")
+```
+
+Here's something handy - put four plots in one output, using the command in the first line below:
+```{r}
+layout(matrix(1:4, 2, 2))
+plot(tr2_plants, type="cladogram")
+plot(tr2_plants, type="fan")
+plot(tr2_plants, type="unrooted")
+plot(tr2_plants, type="radial")
+```
+You can also change the thickness of an edge, its color, how its tip labels are oriented. 
+```{r}
+layout(matrix(1:4, 2, 2))
+plot(tr2_plants, type="unrooted", edge.width=5)
+plot(tr2_plants, type="unrooted", edge.width=5, edge.color="blue")
+plot(tr2_plants, type="unrooted", edge.width=5, edge.color="blue", lab4ut="horizontal")
+plot(tr2_plants, type="unrooted", edge.width=5, edge.color="blue", lab4ut="axial")
+```
+
+Sometimes you might want to adjust the order that taxa appear along the tip labels. Note that we are not changing the underlying phylo-object, or anything about relationships by doing this. 
+
+```{r}
+# rotate clades containing nodes 3 and 4:
+trnew_plants <- rotate(tr2_plants, c("Cabbage", "Kale"))
+plot(trnew_plants)
+# compare the results:
+par(mfrow=c(1,2)) # split graphical device
+plot(tr2_plants) # plot old tre
+plot(trnew_plants) # plot new tree
+```
+
+Sometimes you want to re-arrange the clades on a tree, which can be done with the function ladderize, which in "right" ladderizing puts the smallest clades at the top (or at the left) and in "left" laderizing puts the largest clades at the top (or at the right).
+
+```{r}
+layout(matrix(1:4, 2, 2))
+plot(tr_primate, main = "normal")
+plot(ladderize(tr_primate), main = "right-ladderized")
+plot(ladderize(tr_primate, FALSE), main = "left-ladderized")
+layout(matrix(1, 1))
+```
+
+The code below shows you can ladderize (and what ladderizing is - arranging sub-clades in order of size, which size referring to the number of taxa in the sub-clade)
+
+```{r}
+layout(matrix(1:4, 2, 2))
+plot(tr_primate, main = "normal", type = "phylogram", direction = c("upwards"))
+plot(ladderize(tr_primate), main = "right-ladderized", direction = c("upwards"))
+plot(ladderize(tr_primate, FALSE), main = "left-ladderized", direction=c("upwards"))
+layout(matrix(1, 1))
+```
+
+### MINI EXERCISE 4
+
+Practice a few of these data display techniques using the six-taxon phylogeny that includes cabbage, kale, corn and wheat, plus radish and sequoia.
+
+### SAVING FILES: important for reproducing trees later
+
+As part of Portfolio 3, we'll learn ways outside of R to work with trees to visually change things like tip labels, color coding, etc. (There are also packages in R to do this, e.g. GGTREE.)
+
+For this, you'll want to be able to save the Newick code for any tree typed in (or imported in from database sources using R tools). Here is how to save a long Newick as a named text file. That makes it easier to later re-import the exact tree. 
+
+This will store the new file in your working directory. You may want to then make a copy of it and store it elsewhere, too. (You can do that outside of R Studio, or using Files in the lower right windowframe.)
+
+```{r}
+newick_fn = "tr2_plants"
+write.tree(tr2_plants, file=tr2_plants)
+```
+
+```{r}
+#If you want to make sure it is in your directory, first figure out your working directory
+getwd()
+#Then you can look at the window at lower right, and click to the correct director to find your saved file.
+```
+
+By the way, can save any displayed tree to PDF, or do a screen capture etc.
+you can also save a tree to PDF as shown below. 
+
+```{r}
+pdf_fn = "tr2_plants.pdf"
+pdf(file=pdf_fn)
+plot(tr2_plants, type="unrooted", edge.width=5, edge.color="blue", lab4ut="axial")
+dev.off()
+```
+
+In Macs (and maybe PCs), this will open the PDF from R:
+
+```{r}
+cmdstr = paste("open ", pdf_fn, sep="")
+system(cmdstr)
+```
+
+```{r}
+library(ape)
+#Here is the phylogeny from lecture on Wed
+newick_lecture = "(((((A,B),(C,D)),(((E,F),G))),(H)),((((I,J),K),(L,M)),((N,0),(P,Q))));"
+tr_lectureFULL = read.tree(text=newick_lecture)
+plot(tr_lectureFULL, type="cladogram", direction=c("upwards"))
+```
+
+```{r}
+#In lecture on Wed, we also looked at subclades within this larger phylogeny
+newick_lecture1 = "((((E,F),G)),H);"
+tr_lectureSUB1 = read.tree(text=newick_lecture1)
+plot(tr_lectureSUB1, type="cladogram", direction=c("upwards"))
+newick_lecture2 = "(((I,J),K),(L,M));"
+tr_lectureSUB2 = read.tree(text=newick_lecture2)
+plot(tr_lectureSUB2, type="cladogram", direction=c("upwards"))
+```
+
+
+
+## THIS IS MATERIAL FOR OUR DIGITAL LAB SESSION ON FRIDAY MARCH 8
+
+## TURNING LISTS OF PLANT TAXA INTO PHYLOGENIES: PHYLOMATIC (Package BRRANCHING)
+
+Above, we used a simple tree and relied on our own working knowledge to determine the Newick string and the correct branching sequence for our taxa. 
+
+Many scientists in the field of systematics are involved in creating new and more expansive character matrices filled with copious DNA data or morphological data, and many more than 4 or 5 taxa. We are not going to delve into the protocols for amassing and manipulating such data, or for infer and compiling phylogenies from those data. 
+
+Indeed, given how much is already known about phylogenies, that is not always necessary in many studies of biodiversity asking questions relevant to biogeography, conservation, ethnobotany or macroecology. 
+
+But we definitely will want to work with many more than 4 or 5 taxa. We want to start working up to trees with dozens of taxa, possibly more. 
+
+This week, we'll look at one tool to obtain input for a list of taxa, as either a plotted tree or a Newick tree. The base reference to this is a tree known as the "Phylomatic tree" and there is basically just one key step -- querying Phylomatic.
+
+Phylomatic has the tagline "I can haz all the phylogenies" and can deal with really large trees with hundreds of families and thousands of genera.
+
+Here, we are just going to input a list of plants as a vector of string variables. We are just entering a list, and do not need to worry about setting up the Newick format with parentheses showing the nestedness and relationships among the species. It is critically important that these be correctly spelled with proper species binomial names. (This is reminiscent of the "scrubbed species binomials" that were used in the BIEN database and R BIEN package.)
+
+```{r}
+#If you did not already load the Package brranching, be sure to do so now. You may need to also install it. 
+#install.packages(ape)
+#install.packages("devtools")
+#devtools::install_github("ropensci/brranching")
+#library("ape")
+library("brranching")
+```
+
+
+```{r}
+taxa<-c("Punica granatum", "Theobroma cacao", "Dorstenia contrajerva", "Neomarica northiana", "Zamia floridana", "Aechmea fasciata", "Solandra maxima", "Grevillea robusta", "Jasminum polyanthum", "Tibouchina urvilleana", "Amorphophallus konjac", "Saccharum officinarum")
+taxa
+```
+
+For the ten species above, a tree can be extracted from phylomatic, and plotted.
+
+During lab, I'll explain to you about the reference data and procedures being used to do this:
+
+```{r}
+tree_phylomatic <- phylomatic(taxa = taxa, storedtree ="R20120829", get = 'POST')
+plot(tree_phylomatic, no.margin = TRUE)
+```
+
+We can also write the tree into a text file, in newick format:
+
+```{r}
+newick_fn = "tree_phylomatic"
+write.tree(tree_phylomatic, file=newick_fn)
+#Go and verify that there is now a file in your working directory. Make sure you also know how to open it in another program like a workbook file. You also can copy it onto the clipboard of the computer. 
+```
+
+
+Let's try obtaining another tree using the phylomatic function (which is in the brranching package; see the top of the notebook).
+
+From our earlier work in R BIEN, we had a list of ten breadfruit relatives, in the genus Artocarpus
+
+ [1] "Artocarpus anisophyllus" "Artocarpus dadah"        "Artocarpus fulvicortex" 
+ [4] "Artocarpus hirsutus"     "Artocarpus integer"      "Artocarpus lowii"       
+ [7] "Artocarpus maingayi"     "Artocarpus nitidus"      "Artocarpus rigidus"     
+[10] "Artocarpus scortechinii"
+
+```{r}
+Arto<-c("Artocarpus anisophyllus","Artocarpus dadah","Artocarpus fulvicortex","Artocarpus hirsutus","Artocarpus integer","Artocarpus lowii","Artocarpus maingayi","Artocarpus nitidus","Artocarpus rigidus","Artocarpus scortechinii")
+taxa
+tree_phylomatic_Arto <- phylomatic(taxa = Arto, get = 'POST')
+plot(tree_phylomatic_Arto, no.margin = TRUE)
+newick_fn2 = "tree_phylomatic_Arto"
+write.tree(tree_phylomatic_Arto, file=newick_fn2)
+```
+
+What is going on here? Where else might we look for a proper tree?  Below, we'll explore the DRYAD Database, but also check out this publication: 
+  https://doi.org/10.1093/aob/mcw249
+
+
+Phylomatic is part of R-Open-Sci and it has the tagline "I can haz all the phylogenies" and can deal with really large trees with hundreds of families and thousands of genera, but it is not necessarily going to perform well within a genus. 
+
+In DRYAD, there is a URL on the internet where the scientists have stored a raw-text file with the Newick code that includes details within the conifers, including the genus Abies. 
+WHAT IS THE PUBLICATION
+This tree also has a lot of other data that is useful for angiosperms. Take a look at it here: http://datadryad.org/bitstream/handle/10255/dryad.8791/final_tree.tre?sequence=1
+
+
+```{r}
+spp1 <- c("Abies_nordmanniana", "Abies_bornmuelleriana", "Abies_cilicica", "Abies_cephalonica",
+"Abies_numidica", "Abies_pinsapo", "Abies_alba", "Ginkgo biloba", "Nymphaea lotus", "Illicium mexicanum", "Magnolia fraseri","Lindera pulcherrima")
+urlA<-"http://datadryad.org/bitstream/handle/10255/dryad.8791/final_tree.tre?sequence=1"
+#We are making a "short-cut" variable that is just the URL for this tree. 
+#Now we are going to use the function phylomatic, and instead of using one of the stored trees, we are going to use the tree at that URL.
+Abies<-phylomatic(taxa=spp1, treeuri=urlA)
+plot(Abies)
+```
+
+
+ADD ONE MORE WAY TO DO IT - WITH THE SLASHPATH METHOD
+```{r}
+spp1 <- read.table("slashpath.txt")
+#You can find this file in your working directory and look at how it is set up. 
+#Note that it already assigns every species and/or genus to a family
+#When you pass in species names or genus names, the phylomatic function automatically uses an R Package TAXIZE to look up and associate the taxon names with the family, and then to format the data to feed it into the phylomatic command this way. 
+#Take a look at the output from the line immediately below to inspect the data and how its set up.
+spp1
+tree_phylomatic <- phylomatic(taxa = spp1)
+#We have dropped the Get =POST command.
+plot(tree_phylomatic, no.margin = TRUE)
+```
+
+
+
+A problem with this tree is that it does not include branch lengths. 
+
+For that, we can turn back to the other plant-specific stored tree in Phylomatic, known as "zanne2014"
+
+
+```{r}
+tree_phylomatic <- phylomatic(taxa = spp1, storedtree ="zanne2014", get = 'POST')
+plot(tree_phylomatic, no.margin = TRUE)
+```
+
+Here is another example of a tree with variable branch lengths. 
+
+```{r}
+spp1 <- c("Abies_nordmanniana", "Abies_bornmuelleriana", "Abies_cilicica", "Abies_cephalonica",
+"Abies_numidica", "Abies_pinsapo", "Abies_alba", "Ginkgo biloba", "Nymphaea lotus", "Illicium mexicanum", "Magnolia fraseri","Lindera pulcherrima")
+tree_phylomatic <- phylomatic(taxa = taxa, storedtree ="zanne2014", get = 'POST')
+plot(tree_phylomatic, no.margin = TRUE)
+```
+
+
+Here's an example of this type of data phylogenized: lists of species from Emily Gregory's anatomy textbook. 
+
+```{r}
+EG<-c("Abies",
+"Ailanthus",
+"Aspicllum",
+"Atragene",
+"Bangia",
+"Begonia",
+"Berberis",
+"Betula",
+"Blasia",
+"Blechnum",
+"Caulerpa",
+"Ceratophyllum",
+"Chenopodium",
+"Clematis",
+"Cocculus",
+"Corallorrhiza",
+"Corchorus",
+"Cucurbita",
+"Dahlia",
+"Dioscorea",
+"Dracaena",
+"Equisetum",
+"Euonymus",
+"Euphorbia",
+"Fagus",
+"Ficus",
+"Fontinalis",
+"Fossombronia",
+"Fritillaria",
+"Fucus",
+"Gleditschia",
+"Gleocapsa",
+"Haplomitrium",
+"Hedera",
+"Helianthus",
+"Heterocentron",
+"Hippuris",
+"Hypoderma",
+"Isoetes",
+"Linum",
+"Liquidambar",
+"Marchantia",
+"Momordica",
+"Monopodium",
+"Mucor",
+"Nerium",
+"Nitella",
+"Osmunda",
+"Pandanus",
+"Papaver",
+"Pelargonium",
+"Phlomis",
+"Phytolacca",
+"Pinus",
+"Platanus",
+"Polytrichum",
+"Populus",
+"Potamogeton",
+"Punctum",
+"Quercus",
+"Ricinus",
+"Rubus",
+"Salix",
+"Sambucus",
+"Sclerotium",
+"Selaginella",
+"Sempervivum",
+"Sponia",
+"Stypocaulon",
+"Sympodium",
+"Taxodium",
+"Tecoma",
+"Tradescantia",
+"Urtica",
+"Viola",
+"Vitis",
+"Wisteria",
+"Yucca")
+#Now we are going to look at what we just created:
+EG
+#In this line, we've made the explicit argument to use the defaul R220150415 tree in phylomatic and then to also use the zanne2014 tree. 
+#Note that including the argument get = "POST" we are asking the phylomatic function to connect our genus names to the appropriate family names, which is how phylomatic goes about aligning our list with the supertree phylogeny, and then to output a tree for our subset of taxa.
+tree_phylomatic_EG1 <- phylomatic(taxa = EG, get = 'POST')
+plot(tree_phylomatic_EG1, no.margin = TRUE, type="cladogram")
+newick_fn4 = "tree_phylomatic_EG1"
+write.tree(tree_phylomatic_EG1, file=newick_fn4)
+#repeating to get tree from Zanne2014
+tree_phylomatic_EG2 <- phylomatic(taxa = EG, storedtree ="zanne2014", get = 'POST')
+plot(tree_phylomatic_EG2, no.margin = TRUE, type="cladogram")
+newick_fn5 = "tree_phylomatic_EG2"
+write.tree(tree_phylomatic_EG2, file=newick_fn5)
+```
+
+#### MINI-EXERCISE 5
+
+
+Do and write up notes about two things:
+
+1. Try generating these trees again, but change from cladogram to phylogram, or to another format for the tree. 
+
+2. Then, looking at all your output, what differs most noticably between the pair of trees, and how/why does this relate to the storedtree used to generate them? Try to explain what this means in your own words. 
+
+3. Lastly, look at the output and you'll see that many taxa were excluded. Try looking them up in EOL or Wikipedia. Why was it difficult to include them? What does this say about the history of botany? Are there some things that were excluded that should not have been excluded.  
+
+
+# FINISHING UP - MICRO-EXERCISES AND A MACRO-EXERCISE
+
+To finish up all the homework and work from today, you need to work through all the mini-exercises CORRECTLY. As appropriate, after our Digital Lab 3 session on 3/5, take time to go back and complete them (and add your commentary).
+
+Next, you prepared lists for Portfolio 2. You can use these to finish up this workbook, as long as you have at least two lists of 25 taxa each. 
+
+Format the list so that you can enter it into the phyomatic commands above -- probably by cutting and pasting a list of taxa. You may need to insert quotation marks and/or commas. 
+I encourage you to try a diffrent way of doing this: prepare a file, save it as a *.txt file and then read it and use the file.
+
+Your list/file can then be used to obtain a phylogenetic tree using the code learned above for Phylomatic. 
+
+Plot your tree in one or more formats (e.g., fan, phylogeny, cladogram). Save that in pdf format. 
+
+YOu were able to make those plots because phylomatic generated Newick trees, which you you need to save, too. Use  *.txt format. 
+
+You can then use those output files to begin the part of the Portfolio that uses Interactive Tree of Life. 
+
+Lastly, be sure to save your R Notebook with appropriate output and commentary. 
+
+When your finished with this part of Portfolio 3, you can and should push the notebook and associated exported files back to the appropriate GitHub Repository for Digital Lab 3.  
+
+
+
