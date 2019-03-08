@@ -258,8 +258,8 @@ For this, you'll want to be able to save the Newick code for any tree typed in (
 This will store the new file in your working directory. You may want to then make a copy of it and store it elsewhere, too. (You can do that outside of R Studio, or using Files in the lower right windowframe.)
 
 ```{r}
-newick_fn = "tr2_plants"
-write.tree(tr2_plants, file=tr2_plants)
+newick_fn = "tr_plants"
+write.tree(tr_plants, file=newick_fn)
 ```
 
 ```{r}
