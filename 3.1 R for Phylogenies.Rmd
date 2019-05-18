@@ -545,7 +545,7 @@ To finish up all the homework and work from today, you need to work through all 
 
 Next, you prepared lists for Portfolio 2. You can use these to finish up this workbook, as long as you have at least two lists of 25 taxa each. 
 
-Format the list so that you can enter it into the phyomatic commands above -- probably by cutting and pasting a list of taxa. You may need to insert quotation marks and/or commas. 
+Format the list so that you can enter it into the phylomatic commands above -- probably by cutting and pasting a list of taxa. You may need to insert quotation marks and/or commas. 
 I encourage you to try a diffrent way of doing this: prepare a file, save it as a *.txt file and then read it and use the file.
 
 Your list/file can then be used to obtain a phylogenetic tree using the code learned above for Phylomatic. 
@@ -560,5 +560,182 @@ Lastly, be sure to save your R Notebook with appropriate output and commentary.
 
 When your finished with this part of Portfolio 3, you can and should push the notebook and associated exported files back to the appropriate GitHub Repository for Digital Lab 3.  
 
+```{r}
+
+spp1 <- read.table("Copy of slashpathwelikia.txt")
+#You can find this file in your working directory and look at how it is set up. 
+#Note that it already assigns every species and/or genus to a family
+#When you pass in species names or geneus names, the phylomatic function automatically uses an R Package TAXIZE to look up and associate the taxon names with the family, and then to format the data to feed it into the phylomatic command this way. 
+#Take a look at the output from the line immediately below to inspect the data and how its set up.
+spp1
+tree_phylomatic <- phylomatic(taxa = spp1)
+#We have dropped the Get =POST command.
+plot(tree_phylomatic, no.margin = TRUE)
+```
+
+```{R}
+tree_phylomatic <- phylomatic(taxa = spp1, storedtree ="zanne2014", get = 'POST')
+plot(tree_phylomatic, no.margin = TRUE)
+```
+```{r}
+pdf_fn = "welikia.pdf"
+pdf(file=pdf_fn)
+plot(welikia, type="unrooted", edge.width=5, edge.color="blue", lab4ut="axial")
+dev.off()
+cmdstr = paste("open ", pdf_fn, sep="")
+system(cmdstr)
+```
 
 
+```{R}
+EG<-c("Abies",
+"Ailanthus",
+"Aspicllum",
+"Atragene",
+"Bangia",
+"Begonia",
+"Berberis",
+"Betula",
+"Blasia",
+"Blechnum",
+"Caulerpa",
+"Ceratophyllum",
+"Chenopodium",
+"Clematis",
+"Cocculus",
+"Corallorrhiza",
+"Corchorus",
+"Cucurbita",
+"Dahlia",
+"Dioscorea",
+"Dracaena",
+"Equisetum",
+"Euonymus",
+"Euphorbia",
+"Fagus",
+"Ficus",
+"Fontinalis",
+"Fossombronia",
+"Fritillaria",
+"Fucus",
+"Gleditschia",
+"Gleocapsa",
+"Haplomitrium",
+"Hedera",
+"Helianthus",
+"Heterocentron",
+"Hippuris",
+"Hypoderma",
+"Isoetes",
+"Linum",
+"Liquidambar",
+"Marchantia",
+"Momordica",
+"Monopodium",
+"Mucor",
+"Nerium",
+"Nitella",
+"Osmunda",
+"Pandanus",
+"Papaver",
+"Pelargonium",
+"Phlomis",
+"Phytolacca",
+"Pinus",
+"Platanus",
+"Polytrichum",
+"Populus",
+"Potamogeton",
+"Punctum",
+"Quercus",
+"Ricinus",
+"Rubus",
+"Salix",
+"Sambucus",
+"Sclerotium",
+"Selaginella",
+"Sempervivum",
+"Sponia",
+"Stypocaulon",
+"Sympodium",
+"Taxodium",
+"Tecoma",
+"Tradescantia",
+"Urtica",
+"Viola",
+"Vitis",
+"Wisteria",
+"Yucca")
+#Now we are going to look at what we just created:
+EG
+#In this line, we've made the explicit argument to use the defaul R220150415 tree in phylomatic and then to also use the zanne2014 tree. 
+#Note that including the argument get = "POST" we are asking the phylomatic function to connect our genus names to the appropriate family names, which is how phylomatic goes about aligning our list with the supertree phylogeny, and then to output a tree for our subset of taxa.
+tree_phylomatic_EG1 <- phylomatic(taxa = EG, get = 'POST')
+plot(tree_phylomatic_EG1, no.margin = TRUE, type="cladogram")
+newick_fn4 = "tree_phylomatic_EG1"
+write.tree(tree_phylomatic_EG1, file=newick_fn4)
+#repeating to get tree from Zanne2014
+tree_phylomatic_EG2 <- phylomatic(taxa = EG, storedtree ="zanne2014", get = 'POST')
+plot(tree_phylomatic_EG2, no.margin = TRUE, type="cladogram")
+newick_fn5 = "tree_phylomatic_EG2"
+write.tree(tree_phylomatic_EG2, file=newick_fn5)
+```
+
+```{r}
+spp1 <- c("Acalypha_virginica",
+"Acer_rubrum",
+"Carpinus_caroliniana",
+"Dicanthelium_depauperatum",
+"Dryopteris_intermedia",
+"Erigeron_strigosus",
+"Parthenocissus_quinquefolia",
+"Prunus_serotina",
+"Smilax_rotundifolia",
+"Viburnum_prunifolium",
+"Liquidambar_styraciflua",
+"Castanea_dentata",
+"Eurybia_divaricata",
+"Osmundastrum_cinnamomeum",
+"Aronia_arbutifolia",
+"Quercus_rubra",
+"Rhus_copallinum",
+"Viburnum_acerifolium",
+"Muhlenbergia_schreberi",
+"Acorus_americanus",
+"Alisma_triviale",
+"Boechera_laevigata",
+"Aralia_nudicaulis",
+"Asclepias_tuberosa",
+"Athyrium_filix-femina",
+"Aureolaria_flava",
+"Bidens_frondosa",
+"Carex_umbellata",
+"Carya_glabra",
+"Cephalanthus_occidentalis",
+"Chelone_glabra",
+"Chimaphila_maculata",
+"Cuscuta_gronovii",
+"Cyperus_strigosus",
+"Desmodium_nudiflorum",
+"Desmodium_rotundifolium",
+"Dryopteris_marginalis",
+"Erechtites_hieraciifolius",
+"Eutrochium_fistulosum",
+"Festuca_rubra",
+"Fragaria_virginiana",
+"Galium_circaezans",
+"Galium_triflorum",
+"Gaylussacia_baccata",
+"Geranium_maculatum",
+"Geum_virginianum",
+"Hamamelis_virginiana",
+"Juniperus_virginiana",
+"Kalmia_latifolia",
+"Lespedeza_procumbens",
+"Linum_virginianum",
+"Lonicera_sempervirens")
+tree_phylomatic <- phylomatic(taxa = spp1, storedtree ="zanne2014", get = 'POST')
+plot(tree_phylomatic, no.margin = TRUE)
+newick_fn = "tree_phylomatic_welikia"
+write.tree(tree_phylomatic, file=newick_fn)
+```
