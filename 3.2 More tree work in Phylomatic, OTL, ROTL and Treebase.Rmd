@@ -321,7 +321,18 @@ write.tree(tr2_plants, file=newick_fn)
 
 
 ```{r}
-
+library(rotl)
+taxa <- c("Hyla", "Salmo", "Diadema", "Nautilus")
+resolved_names <- tnrs_match_names(taxa)
+resolved_names
+P_resolved_names <- tnrs_match_names(taxa, context_name = "Animals")
+in_tree <- is_in_tree(ott_id(P_resolved_names))
+in_tree
+my_tree <- tol_induced_subtree(ott_ids = resolved_names$ott_id)
+plot(my_tree, no.margin=TRUE)
+pdffn = "taxa.pdf"
+pdf(file=pdffn)
+dev.off()
 ```
 
 2. You've developed your own lists of plants to resolve and phylogenize. Use it to Get a phylogeny from OTT.
